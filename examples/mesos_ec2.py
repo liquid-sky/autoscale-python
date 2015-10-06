@@ -10,6 +10,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-l', '--log-level', default="warn", help='Log level (debug, [default] info, warn, error)')
     parser.add_argument('-u', '--mesos-url', help='Mesos cluster URL', required=True)
+    parser.add_argument('-e', '--mesos-endpoint', default="/master/snapshot", help='Mesos endpoint URL (/master/snapshot or /stats.json)')
     parser.add_argument('-c', '--cpus', help='Comma-delimited CPU thresholds (lower,upper)')    
     parser.add_argument('-d', '--disk', help='Comma-delimited disk thresholds (lower,upper)')
     parser.add_argument('-m', '--mem', help='Comma-delimited memory thresholds (lower,upper)')
@@ -32,7 +33,7 @@ def main():
         lower, upper = args.mem.split(',')
         thresholds['mem'] = dict(lower=int(lower), upper=int(upper))
 
-    reporter = MesosReporter(args.mesos_url)
+    reporter = MesosReporter(args.mesos_url, args.mesos_endpoint)
     decider = MesosDecider(thresholds)
     scaler = AwsAsgScaler(args.region, args.asg) 
     
