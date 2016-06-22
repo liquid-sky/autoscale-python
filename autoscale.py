@@ -10,9 +10,11 @@ logger = logging.getLogger(__name__)
 
 
 class MesosReporter():
-    def __init__(self, mesos_url):
+    def __init__(self, mesos_url, mesos_endpoint):
         self.mesos_url = mesos_url.rstrip('/')
-        stats_url = '/'.join([self.mesos_url, '/stats.json'])
+        self.mesos_endpoint = mesos_endpoint.lstrip('/')
+        stats_url = '/'.join([self.mesos_url, self.mesos_endpoint])
+        logger.info('Stats url: %s', stats_url)
         self._state = requests.get(stats_url).json()
 
     @property
